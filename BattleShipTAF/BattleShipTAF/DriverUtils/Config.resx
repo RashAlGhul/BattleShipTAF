@@ -123,4 +123,7 @@
   <data name="Driver" xml:space="preserve">
     <value>CHROME</value>
   </data>
+  <data name="TestPassCondition" xml:space="preserve">
+    <value>Игра закончена. Поздравляем, вы победили!</value>
+  </data>
 </root>

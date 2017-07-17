@@ -59,6 +59,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\BasicAI.cs" />
+    <Compile Include="AI\CellStatus.cs" />
+    <Compile Include="AI\EnemyCell.cs" />
     <Compile Include="PageObjects\BasePage.cs" />
     <Compile Include="PageObjects\BattleShipPage.cs" />
     <Compile Include="PageSteps\BattleShipSteps.cs" />

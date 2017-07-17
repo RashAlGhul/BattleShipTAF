@@ -9,17 +9,17 @@ namespace BattleShipTAF.AI
 {
     class BasicAI
     {
-        private EmenyCell[,] _enemyCells;
+        private EnemyCell[,] _enemyCells;
         private IWebElement _enemyBoard;
         public BasicAI(List<IWebElement> enemyCellsList, IWebElement enemyBoard)
         {
             this._enemyBoard = enemyBoard;
-            _enemyCells = new EmenyCell[enemyCellsList.Count / 2,enemyCellsList.Count / 2];
+            _enemyCells = new EnemyCell[enemyCellsList.Count / 2,enemyCellsList.Count / 2];
             for (var i = 0; i < _enemyCells.GetLength(0); i++)
             {
                 for (var j = 0; j < _enemyCells.GetLength(1); j++)
                 {
-                    _enemyCells[i, j] = new EmenyCell(enemyCellsList[i + j], CellStatus.Empty.ToString());
+                    _enemyCells[i, j] = new EnemyCell(enemyCellsList[i + j], CellStatus.Empty.ToString());
                 }
             }
         }
@@ -30,7 +30,7 @@ namespace BattleShipTAF.AI
             Random random = new Random();
             int i = random.Next(_enemyCells.GetLength(0));
             int j = random.Next(_enemyCells.GetLength(1));
-            if (_enemyCells[i, j].Status == "Empty")
+            if ((_enemyCells[i, j].Status == "Empty") && (_enemyCells[i, j].Cell.Enabled))
             {
                 _enemyCells[i, j].Cell.Click();
                 if (_enemyBoard.Enabled)
@@ -38,21 +38,12 @@ namespace BattleShipTAF.AI
                 else
                     _enemyCells[i, j].Status = CellStatus.Miss.ToString();
             }
-            else
-            {
-                i = random.Next(_enemyCells.GetLength(0));
-                j = random.Next(_enemyCells.GetLength(1));
-            }
-
-
-
-            Console.WriteLine(_enemyCells[i, j].Status);
         }
 
         private void HitCell(int i, int j)
         {
             _enemyCells[i, j].Status = CellStatus.Hit.ToString();
-            if ((i != 0) && (j != 0) && (i != _enemyCells.GetLength(0)) && (j != _enemyCells.GetLength(1)))
+            if ((i != 0) && (j != 0) && (i != _enemyCells.GetLength(0)-1) && (j != _enemyCells.GetLength(1)-1))
             {
                 _enemyCells[i + 1, j + 1].Status = CellStatus.Miss.ToString();
                 _enemyCells[i + 1, j - 1].Status = CellStatus.Miss.ToString();
@@ -63,22 +54,22 @@ namespace BattleShipTAF.AI
             if ((i == 0) && (j == 0))
                 _enemyCells[i + 1, j + 1].Status = CellStatus.Miss.ToString();
 
-            if ((i == 0) && (j == _enemyCells.GetLength(1)))
+            if ((i == 0) && (j == _enemyCells.GetLength(1)-1))
+                _enemyCells[i + 1, j - 1].Status = CellStatus.Miss.ToString();
+
+            if ((i == _enemyCells.GetLength(0)-1) && (j == 0))
                 _enemyCells[i - 1, j + 1].Status = CellStatus.Miss.ToString();
 
-            if ((i == _enemyCells.GetLength(0)) && (j == 0))
-                _enemyCells[i - 1, j + 1].Status = CellStatus.Miss.ToString();
-
-            if ((i == _enemyCells.GetLength(0)) && (j == _enemyCells.GetLength(1)))
+            if ((i == _enemyCells.GetLength(0)-1) && (j == _enemyCells.GetLength(1)-1))
                 _enemyCells[i - 1, j - 1].Status = CellStatus.Miss.ToString();
             
-            if ((i == 0) && (j != 0) && (j != _enemyCells.GetLength(1)))
+            if ((i == 0) && (j != 0) && (j != _enemyCells.GetLength(1)-1))
             {
                 _enemyCells[i + 1, j + 1].Status = CellStatus.Miss.ToString();
                 _enemyCells[i + 1, j - 1].Status = CellStatus.Miss.ToString();
             }
 
-            if ((i == _enemyCells.GetLength(0)) && (j != 0) && (j != _enemyCells.GetLength(1)))
+            if ((i == _enemyCells.GetLength(0)-1) && (j != 0) && (j != _enemyCells.GetLength(1)-1))
             {
                 _enemyCells[i - 1, j + 1].Status = CellStatus.Miss.ToString();
                 _enemyCells[i - 1, j - 1].Status = CellStatus.Miss.ToString();
@@ -95,11 +86,6 @@ namespace BattleShipTAF.AI
                 _enemyCells[i + 1, j - 1].Status = CellStatus.Miss.ToString();
                 _enemyCells[i - 1, j - 1].Status = CellStatus.Miss.ToString();
             }
-        }
-
-        private void KillShip()
-        {
-            
         }
     }
 }

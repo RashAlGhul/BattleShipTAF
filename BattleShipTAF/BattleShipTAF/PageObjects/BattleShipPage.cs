@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using BattleShipTAF.DriverUtils;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -13,6 +15,8 @@ namespace BattleShipTAF.PageObjects
         private readonly By _enemyBoard = By.XPath(@"//div[@class='battlefield battlefield__rival']");
         private readonly By _enemyCells = By.XPath(@"//div[@class='battlefield battlefield__rival battlefield__wait']//td");
         private readonly By _selectorRandomEnemy = By.XPath(@"//a[contains(text(),'случайный')]");
+        private readonly By _restartButton = By.XPath(@"//input[@class='notification-submit restart'][@type='submit']");
+        private readonly By _gameOverMessage = By.XPath(@"//div[@class='notifications']//div[@class='notification-message']");
         #endregion
 
         public BattleShipPage(IWebDriver driver) : base(driver) { }
@@ -40,14 +44,31 @@ namespace BattleShipTAF.PageObjects
             return !Driver.FindElement(_selectorRandomEnemy).Enabled;
         }
 
-        public void WaitForStart()
+        public void WaitForStrike()
         {
-            Driver.Wait(ExpectedConditions.ElementToBeClickable(_enemyBoard));
+            if (!IsGameOver())
+                Driver.Wait(ExpectedConditions.ElementToBeClickable(_enemyBoard));
         }
 
-        public int EnemyCellsList()
+        public List<IWebElement> EnemyCellsList()
         {
-            return Driver.FindElements(_enemyCells).Count;
+            return Driver.FindElements(_enemyCells).ToList();
+        }
+
+        public IWebElement EnemyBoard()
+        {
+            return Driver.FindElement(_enemyBoard);
+        }
+
+        public bool IsGameOver()
+        {
+            IWebElement restartButton = Driver.FindElement(_restartButton);
+            return restartButton != null && restartButton.Displayed && restartButton.Enabled;
+        }
+
+        public string GetFinalNotification()
+        {
+            return Driver.FindElement(_gameOverMessage).Text;
         }
     }
 }

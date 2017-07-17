@@ -77,5 +77,14 @@ namespace BattleShipTAF.DriverUtils {
                 return ResourceManager.GetString("Driver", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Игра закончена. Поздравляем, вы победили!.
+        /// </summary>
+        internal static string TestPassCondition {
+            get {
+                return ResourceManager.GetString("TestPassCondition", resourceCulture);
+            }
+        }
     }
 }

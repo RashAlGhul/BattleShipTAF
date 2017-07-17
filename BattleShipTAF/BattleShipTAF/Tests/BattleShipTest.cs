@@ -1,4 +1,5 @@
-﻿using BattleShipTAF.PageSteps;
+﻿using BattleShipTAF.DriverUtils;
+using BattleShipTAF.PageSteps;
 using NUnit.Framework;
 
 namespace BattleShipTAF.Tests
@@ -11,6 +12,9 @@ namespace BattleShipTAF.Tests
         {
             BattleShipSteps steps = new BattleShipSteps(Driver);
             steps.Start();
+            steps.Play();
+            if (steps.GameOverNotification() != Config.TestPassCondition)
+                Assert.Fail(steps.GameOverNotification());
         }
     }
 }
